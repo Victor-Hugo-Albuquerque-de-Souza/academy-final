@@ -26,21 +26,16 @@ export default function AttributeRow(props:any):ReactElement{
         >
           <Grid item sm={6} style={{ paddingLeft: 0 }}>
             <FormControl margin={"dense"} fullWidth>
-              <TextField select label="filtro" defaultValue={"Selecione.."} onChange={event=>setSearchType(event.target.value)}>
+              <TextField select label="filtro" defaultValue={"Selecione.."} onChange={(event:any)=>setStateFilter1(event.target.value)}>
                 <MenuItem value={"Selecione.."}>Selecione:</MenuItem>
 
                 {attributesArray.map((attribute:string) => {
                   return (
                     <MenuItem
                       value={attribute.toString()}
-                      key={attribute}
-                      onChange={(event:any)=>{
-                        setStateFilter1(event.target.value)
-                        console.log(stateFilter1)
-                    }}
+                      key={"k" + attribute}                    
                     >                  
-                      {" "}
-                      {attribute}{" "}
+                      {attribute}
                     </MenuItem>
                   );
                 })}
