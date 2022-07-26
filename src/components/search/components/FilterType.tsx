@@ -33,7 +33,14 @@ export default function FilterType(
         </>
       );
     }
-    case "Título": {
+    case "Título":
+    case "Primeiro Nome":
+    case "Último Nome":
+    case "Email":
+    case "Endereço":
+    case "Cliente":
+    case "Funcionário":
+     {
       return (
         <Grid item sm={6}>
           <FormControl margin={"dense"} fullWidth>
@@ -56,6 +63,10 @@ export default function FilterType(
           </FormControl>
         </Grid>
       );
+    }
+
+    case "Data do Aluguel":{
+      return
     }
     default: {
       return;

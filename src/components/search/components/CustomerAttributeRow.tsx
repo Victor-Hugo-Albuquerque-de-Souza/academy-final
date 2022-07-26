@@ -9,9 +9,8 @@ import {
 import FilterType from "./FilterType";
 
 
-export default function AttributeRow(props:any):ReactElement{
+export default function CustomerAttributeRow(props:any):ReactElement{
     const attributesArray=props.attributes
-    const [searchType, setSearchType]:any=useState()
     const [stateFilter1,setStateFilter1]=useState()
 
     return(
@@ -45,13 +44,6 @@ export default function AttributeRow(props:any):ReactElement{
 
             <FilterType type={stateFilter1}/>
           
-          {/* <Grid item sm={6}>
-            <FormControl margin={"dense"} fullWidth>
-              <InputLabel htmlFor="f_seachValue">Valor de Busca:</InputLabel>
-              <Input type="text" id="searchValue" />
-            </FormControl>
-          </Grid> */}
-          
           <Box
             height={"fit-content"}
             style={{
@@ -59,20 +51,6 @@ export default function AttributeRow(props:any):ReactElement{
               flexDirection: "column",
             }}
           >
-            {/* <Button
-              size="small"
-              style={{
-                margin: "20px 0",
-                display:'flex',
-                justifyContent:'flex-end',
-                borderRadius: "50px",
-                flexDirection:"column"
-              }}
-              variant="text"
-              color="primary"
-            >
-              {props.field1_btn != "none"? "Remover":"Adicionar"}
-            </Button> */}
           </Box>
 
         </Grid>

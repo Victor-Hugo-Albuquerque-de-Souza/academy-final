@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import {
   Box,
@@ -8,15 +8,19 @@ import {
   InputLabel,
   FormGroup,
   TextField,
-  RadioGroup,
   FormControlLabel,
-  Radio,
   Checkbox,
 } from "@material-ui/core";
 import { FormLabel, MenuItem, TextareaAutosize } from "@mui/material";
 import { languages } from "../../interfaces/Enums";
+import { useForm } from "react-hook-form";
+import * as Yup from 'yup';
+import {yupResolver} from "@hookform/resolvers/yup";
+import { IRequest } from "../../interfaces/Index";
+
 
 export function FilmCreation(): ReactElement {
+
   return (
     <Box
       display={"flex"}
@@ -33,7 +37,7 @@ export function FilmCreation(): ReactElement {
       }}
       borderRadius={5}
     >
-      <FormGroup /* onSubmit={handleSubmit} */>
+      <FormGroup /* onSubmit={handleSubmit(onHandleSubmit)} */>
         <FormLabel style={{ fontSize: "25px" }}>Cadastro de Filme:</FormLabel>
 
         <Grid container spacing={3} justifyContent={"flex-end"}>
@@ -135,12 +139,6 @@ export function FilmCreation(): ReactElement {
                 />
               </Box>
 
-              {/* <TextareaAutosize
-                aria-setsize={15}
-                aria-label="empty textarea"
-                style={{ width: "100%", resize: "none" }}
-                minRows={6}
-              /> */}
             </FormControl>
           </Grid>
 

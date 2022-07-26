@@ -68,7 +68,7 @@ export default function PermanentDrawerLeft() {
           linkChild1="novoCliente"
           firstChildIcon={<PersonAddIcon />}
           firstChildTypo="Cadastrar Cliente"
-          linkChild2="consultarCliente"
+          linkChild2="buscarClientes"
           secondChildIcon={<SearchIcon />}
           secondChildTypo="Buscar Cliente(s)"
         />
@@ -79,7 +79,7 @@ export default function PermanentDrawerLeft() {
           linkChild1="novoAluguel"
           firstChildIcon={<CurrencyExchangeIcon />}
           firstChildTypo="Novo Aluguel"
-          linkChild2="consultarAluguel"
+          linkChild2="buscarAlugueis"
           secondChildIcon={<SearchIcon />}
           secondChildTypo="Buscar Aliguel(is)"
         />

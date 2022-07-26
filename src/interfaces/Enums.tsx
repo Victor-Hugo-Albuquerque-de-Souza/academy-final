@@ -7,6 +7,20 @@ export const filmAttributes = [
     "Classificação Etária",
   ];
 
+  export const customerAttributes = [
+    "Primeiro Nome",
+    "Último Nome",
+    "Email",
+    "Endereço"
+  ]
+
+  export const rentalAttributes =[
+    "Data do Aluguél",
+    "Cód. do Inventário",
+    "Cliente",
+    "Funcionário"
+  ]
+
   export const languages =[
     "Ingles",
     "Espanhol",
@@ -16,3 +30,5 @@ export const filmAttributes = [
     "Alemao",
     "Outro"
   ]
+
+  
