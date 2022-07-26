@@ -4,8 +4,22 @@ import AttributeRow from "./components/FilmAttributeRow";
 import { filmAttributes } from "../../interfaces/Enums";
 import EnhancedTable from "./components/GettingFilms";
 import ControlledAccordions from "./searchAccordeon";
+import axios from "axios";
+import { getAll } from "../../requests/Requests";
 
 export default function SearchMovie(): ReactElement {
+
+  //   useEffect(() => {
+  //   axios
+  //     .request(getAll)
+  //     .then(function (response) {
+  //       console.log(response.data[0].description);
+
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   return (
     <Box
@@ -22,7 +36,7 @@ export default function SearchMovie(): ReactElement {
 
       <Box>
 
-        <EnhancedTable/>
+        <EnhancedTable />
         
       </Box>
     </Box>

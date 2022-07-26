@@ -4,7 +4,7 @@ import { IRequest } from "../interfaces/Index";
     method: "GET",
     url: "http://localhost:3335/api/v1/film",
     mode:"no-cors",
-    // params: { q: "London" }, //parâmetros da minha consulta
+    params: {limit: 100},
     headers: {
     //   "authorization: "weatherapi-com.p.rapidapi.com",
     //   "token": "72a328c869msh73832b9b0829d05p15c894jsn7cb8cd43dad6" // Json web token

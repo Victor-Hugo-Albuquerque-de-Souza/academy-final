@@ -102,7 +102,7 @@ export function FilmCreation(): ReactElement {
 
           <Grid item sm={4}>
             <FormControl margin={"dense"} fullWidth>
-              <InputLabel htmlFor="f_rating">Clas. etária:</InputLabel>
+              <InputLabel htmlFor="f_rating">Class. etária:</InputLabel>
               <Input id="f_rating" type="number" />
             </FormControl>
           </Grid>

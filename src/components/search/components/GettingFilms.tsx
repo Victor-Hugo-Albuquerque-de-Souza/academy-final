@@ -21,46 +21,22 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { LocalMovies } from '@mui/icons-material';
+import { getAll } from '../../../requests/Requests';
+import axios from 'axios';
+import {useEffect, useState, useRef} from "react";
+import { filmAttributes } from '../../../interfaces/Enums';
+import { GetMovies } from '../../../interfaces/Index';
 
 interface Data {
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
-}
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-): Data {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
+  title: string;
+  release_year: number;
+  language:{
+    name: string;
   };
+  rental_rate: number;
+  rental_duration: number;
+  description:string
 }
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -86,7 +62,7 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
+function stableSort<T>(array: any [], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -100,41 +76,41 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof GetMovies;
   label: string;
   numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'name',
+    id: 'title',
     numeric: false,
     disablePadding: true,
-    label: 'Dessert (100g serving)',
+    label: 'Título',
   },
   {
-    id: 'calories',
+    id: 'release_year',
     numeric: true,
     disablePadding: false,
-    label: 'Calories',
+    label: 'Ano de Lançamento',
   },
   {
-    id: 'fat',
+    id: 'rental_rate',
     numeric: true,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: 'Aluguel $',
   },
   {
-    id: 'carbs',
+    id: 'rental_duration',
     numeric: true,
     disablePadding: false,
-    label: 'Carbs (g)',
+    label: 'Tempo Aluguel',
   },
   {
-    id: 'protein',
+    id: 'description',
     numeric: true,
     disablePadding: false,
-    label: 'Protein (g)',
+    label: 'Descrição',
   },
 ];
 
@@ -250,8 +226,27 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 };
 
 export default function EnhancedTable() {
+
+   const [filmes,setFilmes]=useState<Data[]>([])
+
+   useEffect(() => {
+    axios
+      .request(getAll)
+      .then(function (response) {
+        setFilmes(response.data)
+        console.log(response.data)
+      })
+      .then(()=>{
+        console.log(filmes)
+      })
+      .catch(function (error) {
+        console.log(error);
+
+      });
+  }, []);
+
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('title');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -268,14 +263,14 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = filmes.map((n) => n.title);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.MouseEvent<unknown>, name: any) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected: readonly string[] = [];
 
@@ -308,15 +303,16 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (name: any) => selected.indexOf(name) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filmes.length) : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
+
       <Paper sx={{ width: '100%', mb: 2 }}>
+
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
@@ -330,37 +326,31 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={filmes.length}
             />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
               rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(filmes, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.title);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.title)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.title}
                       selected={isItemSelected}
+                      style={{textAlign:'center'}}
                     >
 
                       <TableCell padding="checkbox">
                         <LocalMovies/>
-                        {/* <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        /> */}
                       </TableCell>
                       <TableCell
                         component="th"
@@ -368,12 +358,14 @@ export default function EnhancedTable() {
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {row.title}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      <TableCell align="center">{row.release_year}</TableCell>
+                      {/* <TableCell align="right">{row.language.name}</TableCell> */}
+                      <TableCell align="center">{row.rental_rate}</TableCell>
+                      <TableCell align="center">{row.rental_duration}</TableCell>
+                      <TableCell align="center">{row.description}</TableCell>
+
                     </TableRow>
                   );
                 })}
@@ -392,7 +384,7 @@ export default function EnhancedTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={filmes.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -406,3 +398,102 @@ export default function EnhancedTable() {
     </Box>
   );
 }
+
+// =================================================================================================================
+
+// import * as React from "react";
+// import Table from "@mui/material/Table";
+// import TableBody from "@mui/material/TableBody";
+// import TableCell from "@mui/material/TableCell";
+// import TableContainer from "@mui/material/TableContainer";
+// import TableHead from "@mui/material/TableHead";
+// import TableRow from "@mui/material/TableRow";
+// import Paper from "@mui/material/Paper";
+// import { useEffect, useState, useRef, useLayoutEffect } from "react";
+// import axios from "axios";
+// import { getAll } from "../../../requests/Requests";
+// import { Button, Typography } from "@material-ui/core";
+// import { GetMovies } from "../../../interfaces/Index";
+
+// export default function SpanningTable(): React.ReactElement {
+
+//   const [filmes, setFilmes] = useState<GetMovies[]>([])
+//   const filmesRef=useRef()
+
+//   var rows:GetMovies[]=[]
+
+//   const arrayTeste = [{
+//     title:"teste",
+//     release_year:12,
+//     language:"teste",
+//     rental_rate:12,
+//     rental_duration:12,
+//     description:"teste"
+//   },{
+//     title:"teste",
+//     release_year:12,
+//     language:"teste",
+//     rental_rate:12,
+//     rental_duration:12,
+//     description:"teste"
+//   },]
+
+//   const printState = () =>{
+//     console.log(filmes)
+//   }
+
+//   const init = () => {
+//     axios
+//       .request(getAll)
+//       .then( (response) => {
+        
+//          filmesRef.current=response.data  
+//          rows=response.data                 
+//          setFilmes(rows)                    
+
+//          console.log("rows =", rows[0])
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   };
+
+//     // useEffect(() => {
+//     //   init()
+//     // }, []);
+
+//   return (
+//     <>
+//       <TableContainer component={Paper}>
+//         <Table sx={{ minWidth: 700 }} aria-label="spanning table">
+//           <TableHead>
+//             <TableRow>
+//               <TableCell>Título</TableCell>
+//               <TableCell align="right">Ano de Lançamento</TableCell>
+//               <TableCell align="right">Idioma</TableCell>
+//               <TableCell align="right">Preço Aluguel</TableCell>
+//               <TableCell align="right">Duração Aluguel</TableCell>
+//               <TableCell align="right">Descrição</TableCell>
+//             </TableRow>
+//           </TableHead>
+
+//           <TableBody>
+            
+//              {filmes.map((row) => (
+//               <TableRow key={row.title}>
+//                 <TableCell>{row.title}</TableCell>
+//                 <TableCell align="center">{row.title}</TableCell>
+//                 <TableCell align="center">{row.release_year}</TableCell>
+//                 <TableCell align="center">{row.language.name}</TableCell>
+//                 <TableCell align="center">{row.rental_rate}</TableCell>
+//                 <TableCell align="center">{row.rental_duration}</TableCell>
+//                 <TableCell align="center">{row.description}</TableCell>
+//               </TableRow>
+//             ))}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+//       <Button onClick={()=>{init()}}>Teste</Button>
+//     </>
+//   );
+// }
