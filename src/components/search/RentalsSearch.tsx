@@ -1,59 +1,44 @@
-import {
-    Box,
-    Button,
-    Divider,
-    FormGroup,
-    FormLabel,
-  } from "@material-ui/core";
-  import { ReactElement, useState } from "react";
-  import AttributeRow from "./components/FilmAttributeRow";
-  import { rentalAttributes } from "../../interfaces/Enums";
-  
-  export default function SearchRentals(): ReactElement {
-  
-  
-    return (
-      <Box
-        width={"700px"}
-        height={"fit-content"}
-        flex
-        justifyContent={"center"}
-        alignContent={"center"}
-      >
-        <FormGroup>
-          <FormLabel style={{ fontSize: "40px" }}>Busca de Aluguéis:</FormLabel>
-  
-          <AttributeRow attributes={rentalAttributes}/>
-          <AttributeRow attributes={rentalAttributes}/>
-          <AttributeRow attributes={rentalAttributes}/>
-          <AttributeRow attributes={rentalAttributes}/>
-  
-          <Box>
-            <Button
-              size="medium"
-              color={"primary"}
-              variant={"contained"}
-              type={"submit"}
-              style={{margin:'15px 0'}}
-            >
-              Buscar
-            </Button>
-          </Box>
-        </FormGroup>
-        <Divider/>
-  
-        <Box>
-            <Button
-              size="medium"
-              color={"primary"}
-              variant={"contained"}
-              type={"submit"}
-              style={{margin:'15px 0'}}
-            >
-              Listar todos
-            </Button>
-          </Box>
+import { Box, Button, Divider, FormGroup, FormLabel } from "@material-ui/core";
+import { ReactElement, useEffect, useRef, useState } from "react";
+import AttributeRow from "./components/FilmAttributeRow";
+import { filmAttributes } from "../../interfaces/Enums";
+import EnhancedTable from "./components/GettingRentals";
+import ControlledAccordions from "./RentalsSearchAccordeon";
+import axios from "axios";
+import { getAllMovies } from "../../requests/Requests";
+
+export default function SearchMovie(): ReactElement {
+
+  //   useEffect(() => {
+  //   axios
+  //     .request(getAll)
+  //     .then(function (response) {
+  //       console.log(response.data[0].description);
+
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }, []);
+
+  return (
+    <Box
+      width={"700px"}
+      height={"fit-content"}
+      flex
+      justifyContent={"center"}
+      alignContent={"center"}
+    >
+
+      <ControlledAccordions/>
+
+      <Divider />
+
+      <Box>
+
+        <EnhancedTable />
+        
       </Box>
-    );
-  }
-  
+    </Box>
+  );
+}

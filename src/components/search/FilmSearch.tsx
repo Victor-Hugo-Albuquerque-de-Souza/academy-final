@@ -3,9 +3,9 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 import AttributeRow from "./components/FilmAttributeRow";
 import { filmAttributes } from "../../interfaces/Enums";
 import EnhancedTable from "./components/GettingFilms";
-import ControlledAccordions from "./searchAccordeon";
+import ControlledAccordions from "./FilmSearchAccordeon";
 import axios from "axios";
-import { getAll } from "../../requests/Requests";
+import { getAllMovies } from "../../requests/Requests";
 
 export default function SearchMovie(): ReactElement {
 

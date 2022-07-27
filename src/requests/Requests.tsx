@@ -1,8 +1,33 @@
 import { IRequest } from "../interfaces/Index";
+import axios from "axios";
 
-  export const getAll : IRequest = {
+export const api = axios.create({ baseURL: 'http://localhost:3335/api/v1/' });
+
+  export const getAllMovies : IRequest = {
     method: "GET",
     url: "http://localhost:3335/api/v1/film",
+    mode:"no-cors",
+    params: {limit: 100},
+    headers: {
+    //   "authorization: "weatherapi-com.p.rapidapi.com",
+    //   "token": "72a328c869msh73832b9b0829d05p15c894jsn7cb8cd43dad6" // Json web token
+    }
+  };
+
+  export const getAllCustomers : IRequest = {
+    method: "GET",
+    url: "http://localhost:3335/api/v1/customer",
+    mode:"no-cors",
+    params: {limit: 100},
+    headers: {
+    //   "authorization: "weatherapi-com.p.rapidapi.com",
+    //   "token": "72a328c869msh73832b9b0829d05p15c894jsn7cb8cd43dad6" // Json web token
+    }
+  };
+
+  export const getAllRentals : IRequest = {
+    method: "GET",
+    url: "http://localhost:3335/api/v1/rentals",
     mode:"no-cors",
     params: {limit: 100},
     headers: {

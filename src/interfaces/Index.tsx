@@ -31,3 +31,28 @@ export interface GetMovies{
     rental_duration:number,
     description:string
 }
+
+export interface GetCustomer{
+    first_name:string,
+    last_name:number,
+    email:number,
+    address:number,
+}
+
+export interface GetRentals{
+    date_rental:string,
+    inventory_code:number,
+    customer_id:string,
+    employee_id:string
+}
+export interface createMovie{
+    title:string;
+    description:string;
+    release_year:number;
+    language_id:number;
+    rental_duration:number;
+    rental_rate:number;
+    replacement_cost:number;
+    rating:string;
+    // special_features:string;
+}

@@ -21,21 +21,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { LocalMovies } from '@mui/icons-material';
-import { getAllMovies } from '../../../requests/Requests';
+import { getAllCustomers } from '../../../requests/Requests';
 import axios from 'axios';
 import {useEffect, useState, useRef} from "react";
 import { filmAttributes } from '../../../interfaces/Enums';
-import { GetMovies } from '../../../interfaces/Index';
+import { GetCustomer } from '../../../interfaces/Index';
 
 interface Data {
-  title: string;
-  release_year: number;
-  language:{
-    name: string;
-  };
-  rental_rate: number;
-  rental_duration: number;
-  description:string
+  first_name:string,
+  last_name:string,
+  email:string,
+  address:string,
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -76,42 +72,36 @@ function stableSort<T>(array: any [], comparator: (a: T, b: T) => number) {
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof GetMovies;
+  id: keyof GetCustomer;
   label: string;
   numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'title',
+    id: 'first_name',
     numeric: false,
     disablePadding: true,
-    label: 'Título',
+    label: 'Primeiro Nome',
   },
   {
-    id: 'release_year',
+    id: 'last_name',
     numeric: true,
     disablePadding: false,
-    label: 'Ano de Lançamento',
+    label: 'Último Nome',
   },
   {
-    id: 'rental_rate',
+    id: 'email',
     numeric: true,
     disablePadding: false,
-    label: 'Aluguel $',
+    label: 'Email',
   },
   {
-    id: 'rental_duration',
+    id: 'address',
     numeric: true,
     disablePadding: false,
-    label: 'Tempo Aluguel',
-  },
-  {
-    id: 'description',
-    numeric: true,
-    disablePadding: false,
-    label: 'Descrição',
-  },
+    label: 'Endereço',
+  }
 ];
 
 interface EnhancedTableProps {
@@ -231,7 +221,7 @@ export default function EnhancedTable() {
 
    useEffect(() => {
     axios
-      .request(getAllMovies)
+      .request(getAllCustomers)
       .then(function (response) {
         setFilmes(response.data)
         console.log(response.data)
@@ -246,7 +236,7 @@ export default function EnhancedTable() {
   }, []);
 
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('title');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('first_name');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -263,7 +253,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = filmes.map((n) => n.title);
+      const newSelecteds = filmes.map((n) => n.first_name);
       setSelected(newSelecteds);
       return;
     }
@@ -334,17 +324,17 @@ export default function EnhancedTable() {
               {stableSort(filmes, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.title);
+                  const isItemSelected = isSelected(row.first_name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.title)}
+                      onClick={(event) => handleClick(event, row.first_name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.title}
+                      key={row.first_name}
                       selected={isItemSelected}
                       style={{textAlign:'center'}}
                     >
@@ -358,13 +348,11 @@ export default function EnhancedTable() {
                         scope="row"
                         padding="none"
                       >
-                        {row.title}
+                        {row.first_name}
                       </TableCell>
-                      <TableCell align="center">{row.release_year}</TableCell>
-                      {/* <TableCell align="right">{row.language.name}</TableCell> */}
-                      <TableCell align="center">{row.rental_rate}</TableCell>
-                      <TableCell align="center">{row.rental_duration}</TableCell>
-                      <TableCell align="center">{row.description}</TableCell>
+                      <TableCell align="center">{row.last_name}</TableCell>
+                      <TableCell align="center">{row.email}</TableCell>
+                      <TableCell align="center">{row.address}</TableCell>
 
                     </TableRow>
                   );

@@ -25,17 +25,13 @@ import { getAllMovies } from '../../../requests/Requests';
 import axios from 'axios';
 import {useEffect, useState, useRef} from "react";
 import { filmAttributes } from '../../../interfaces/Enums';
-import { GetMovies } from '../../../interfaces/Index';
+import { GetRentals } from '../../../interfaces/Index';
 
 interface Data {
-  title: string;
-  release_year: number;
-  language:{
-    name: string;
-  };
-  rental_rate: number;
-  rental_duration: number;
-  description:string
+  date_rental:string,
+  inventory_code:number,
+  customer_id:string,
+  employee_id:string
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -76,42 +72,36 @@ function stableSort<T>(array: any [], comparator: (a: T, b: T) => number) {
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof GetMovies;
+  id: keyof GetRentals;
   label: string;
   numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'title',
+    id: 'date_rental',
     numeric: false,
     disablePadding: true,
-    label: 'Título',
+    label: 'Data do Aluguel',
   },
   {
-    id: 'release_year',
+    id: 'inventory_code',
     numeric: true,
     disablePadding: false,
-    label: 'Ano de Lançamento',
+    label: 'Cód. Inventário',
   },
   {
-    id: 'rental_rate',
+    id: 'customer_id',
     numeric: true,
     disablePadding: false,
-    label: 'Aluguel $',
+    label: 'Cliente',
   },
   {
-    id: 'rental_duration',
+    id: 'employee_id',
     numeric: true,
     disablePadding: false,
-    label: 'Tempo Aluguel',
-  },
-  {
-    id: 'description',
-    numeric: true,
-    disablePadding: false,
-    label: 'Descrição',
-  },
+    label: 'Colaborador',
+  }
 ];
 
 interface EnhancedTableProps {
@@ -246,7 +236,7 @@ export default function EnhancedTable() {
   }, []);
 
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('title');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('date_rental');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -263,7 +253,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = filmes.map((n) => n.title);
+      const newSelecteds = filmes.map((n) => n.date_rental);
       setSelected(newSelecteds);
       return;
     }
@@ -334,17 +324,17 @@ export default function EnhancedTable() {
               {stableSort(filmes, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.title);
+                  const isItemSelected = isSelected(row.date_rental);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.title)}
+                      onClick={(event) => handleClick(event, row.date_rental)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.title}
+                      key={row.date_rental}
                       selected={isItemSelected}
                       style={{textAlign:'center'}}
                     >
@@ -358,13 +348,11 @@ export default function EnhancedTable() {
                         scope="row"
                         padding="none"
                       >
-                        {row.title}
+                        {row.date_rental}
                       </TableCell>
-                      <TableCell align="center">{row.release_year}</TableCell>
-                      {/* <TableCell align="right">{row.language.name}</TableCell> */}
-                      <TableCell align="center">{row.rental_rate}</TableCell>
-                      <TableCell align="center">{row.rental_duration}</TableCell>
-                      <TableCell align="center">{row.description}</TableCell>
+                      <TableCell align="center">{row.inventory_code}</TableCell>
+                      <TableCell align="center">{row.customer_id}</TableCell>
+                      <TableCell align="center">{row.employee_id}</TableCell>
 
                     </TableRow>
                   );
